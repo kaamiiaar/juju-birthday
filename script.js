@@ -952,7 +952,7 @@ function displayMemories() {
 }
 
 // Helper function to create photo (moved outside displayMemories)
-function createPhoto(index) {
+function createPhoto(index, totalImages = 49) {
   const photo = document.createElement("div");
   photo.className = "memory-photo";
 
@@ -974,6 +974,24 @@ function createPhoto(index) {
     z-index: 1;
   `;
 
+  // Add hover effect
+  photo.addEventListener("mouseover", () => {
+    photo.style.transform = `rotate(${rotation}deg) scale(${scale * 1.1})`;
+    photo.style.zIndex = "2";
+    photo.style.boxShadow = "0 8px 30px rgba(0,0,0,0.3)";
+  });
+
+  photo.addEventListener("mouseout", () => {
+    photo.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+    photo.style.zIndex = "1";
+    photo.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
+  });
+
+  // Add click handler for fullscreen view
+  photo.addEventListener("click", () => {
+    showFullscreenView(index, totalImages);
+  });
+
   const img = document.createElement("img");
   img.src = `./assets/images/${index}.jpeg`;
   img.style.cssText = `
@@ -984,4 +1002,203 @@ function createPhoto(index) {
 
   photo.appendChild(img);
   return photo;
+}
+
+function showFullscreenView(currentIndex, totalImages) {
+  const fullscreen = document.createElement("div");
+  fullscreen.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
+
+  // Create image container
+  const imgContainer = document.createElement("div");
+  imgContainer.style.cssText = `
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+    width: 100%;
+  `;
+
+  // Create image
+  const fullImg = document.createElement("img");
+  fullImg.src = `./assets/images/${currentIndex}.jpeg`;
+  fullImg.style.cssText = `
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  `;
+
+  // Create close button with mobile-friendly positioning
+  const closeBtn = document.createElement("button");
+  closeBtn.innerHTML = "×";
+  closeBtn.style.cssText = `
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    border-radius: 50%;
+    z-index: 1002;
+    padding: 0;
+    line-height: 1;
+  `;
+
+  // Create navigation buttons with mobile-friendly styling
+  const createNavButton = (text, isNext) => {
+    const button = document.createElement("button");
+    button.innerHTML = text;
+    button.style.cssText = `
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border-radius: 50%;
+      z-index: 1001;
+      ${isNext ? "right: 10px" : "left: 10px"};
+      padding: 0;
+      line-height: 1;
+
+      @media (min-width: 768px) {
+        width: 60px;
+        height: 60px;
+        font-size: 50px;
+        ${isNext ? "right: 20px" : "left: 20px"};
+      }
+    `;
+
+    // Add hover effects for non-touch devices
+    if (window.matchMedia("(hover: hover)").matches) {
+      button.addEventListener("mouseover", () => {
+        button.style.background = "rgba(0, 0, 0, 0.8)";
+        button.style.transform = "translateY(-50%) scale(1.1)";
+      });
+
+      button.addEventListener("mouseout", () => {
+        button.style.background = "rgba(0, 0, 0, 0.5)";
+        button.style.transform = "translateY(-50%) scale(1)";
+      });
+    }
+
+    return button;
+  };
+
+  const prevBtn = createNavButton("‹", false);
+  const nextBtn = createNavButton("›", true);
+
+  // Add navigation functionality
+  const navigate = (direction) => {
+    let newIndex = currentIndex + direction;
+    if (newIndex < 1) newIndex = totalImages;
+    if (newIndex > totalImages) newIndex = 1;
+    fullImg.src = `./assets/images/${newIndex}.jpeg`;
+    currentIndex = newIndex;
+  };
+
+  // Add touch swipe support
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  fullscreen.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    },
+    false
+  );
+
+  fullscreen.addEventListener(
+    "touchend",
+    (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    },
+    false
+  );
+
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchEndX - touchStartX;
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        navigate(-1); // Swipe right = previous
+      } else {
+        navigate(1); // Swipe left = next
+      }
+    }
+  }
+
+  prevBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navigate(-1);
+  });
+
+  nextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    navigate(1);
+  });
+
+  // Add keyboard navigation
+  const handleKeydown = (e) => {
+    if (e.key === "ArrowLeft") navigate(-1);
+    if (e.key === "ArrowRight") navigate(1);
+    if (e.key === "Escape") closeFullscreen();
+  };
+
+  document.addEventListener("keydown", handleKeydown);
+
+  // Close fullscreen function
+  const closeFullscreen = () => {
+    document.removeEventListener("keydown", handleKeydown);
+    fullscreen.remove();
+  };
+
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeFullscreen();
+  });
+
+  // Prevent closing when clicking the image
+  imgContainer.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  // Close on background click
+  fullscreen.addEventListener("click", closeFullscreen);
+
+  // Append elements
+  imgContainer.appendChild(fullImg);
+  imgContainer.appendChild(closeBtn);
+  imgContainer.appendChild(prevBtn);
+  imgContainer.appendChild(nextBtn);
+  fullscreen.appendChild(imgContainer);
+  document.body.appendChild(fullscreen);
 }
