@@ -823,7 +823,7 @@ function displayMemories() {
   memoriesSection.innerHTML = "";
   memoriesSection.style.position = "relative";
   memoriesSection.style.overflow = "hidden";
-  memoriesSection.style.minHeight = "200vh"; // Make section taller for falling effect
+  memoriesSection.style.minHeight = "200vh";
 
   // Create container for falling photos
   const photoContainer = document.createElement("div");
@@ -834,293 +834,99 @@ function displayMemories() {
   photoContainer.style.height = "100%";
   memoriesSection.appendChild(photoContainer);
 
-  // Photo creation and animation function
-  function createPhoto(index) {
-    const photo = document.createElement("div");
-    photo.className = "memory-photo";
-
-    // Random initial position and rotation
-    const startX = Math.random() * 100;
-    const rotation = Math.random() * 30 - 15;
-    const scale = 0.8 + Math.random() * 0.4; // Random size between 0.8 and 1.2
-    const delay = Math.random() * 5; // Random delay up to 5s
-
-    // Style the photo container
-    photo.style.cssText = `
-      position: absolute;
-      top: -20%;
-      left: ${startX}%;
-      transform: rotate(${rotation}deg) scale(${scale});
-      width: 300px;
-      height: 300px;
-      background: white;
-      padding: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-      cursor: pointer;
-      z-index: 1;
-    `;
-
-    // Create image element
-    const img = document.createElement("img");
-    img.src = `./assets/images/${index}.jpeg`;
-    img.style.cssText = `
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    `;
-
-    photo.appendChild(img);
-
-    // Add hover effect
-    photo.addEventListener("mouseover", () => {
-      photo.style.transform = `rotate(${rotation}deg) scale(${scale * 1.1})`;
-      photo.style.zIndex = "1000";
-      photo.style.boxShadow = "0 8px 30px rgba(0,0,0,0.3)";
-    });
-
-    photo.addEventListener("mouseout", () => {
-      photo.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-      photo.style.zIndex = "1";
-      photo.style.boxShadow = "0 4px 15px rgba(0,0,0,0.2)";
-    });
-
-    // Add falling animation
-    photo.animate(
-      [
-        { top: "-20%", offset: 0 },
-        { top: `${70 + Math.random() * 20}%`, offset: 1 },
-      ],
-      {
-        duration: 3000 + Math.random() * 2000, // Random duration
-        delay: delay * 1000,
-        easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        fill: "forwards",
-      }
-    );
-
-    return photo;
-  }
-
-  // Create and add photos
+  // Create all photos but keep them hidden initially
+  const photos = [];
   const totalImages = 49;
+
   for (let i = 1; i <= totalImages; i++) {
     const photo = createPhoto(i);
+    photo.style.opacity = "0"; // Hide initially
+    photo.style.top = "-20%"; // Set initial position
     photoContainer.appendChild(photo);
+    photos.push(photo);
   }
 
-  // Add scroll-based parallax effect
-  window.addEventListener("scroll", () => {
-    const scrolled = window.pageYOffset;
-    const photos = document.querySelectorAll(".memory-photo");
+  // Flag to track if animation has started
+  let animationStarted = false;
+
+  // Function to start falling animation
+  function startFallingAnimation() {
+    if (animationStarted) return;
+    animationStarted = true;
 
     photos.forEach((photo, index) => {
-      const speed = 1 + (index % 3) * 0.1; // Different speeds for different photos
-      const yPos = -(scrolled * speed) * 0.1;
-      const currentTransform = photo.style.transform;
-      const baseTransform = currentTransform.split("translateY")[0];
-      photo.style.transform = `${baseTransform} translateY(${yPos}px)`;
+      photo.style.opacity = "1";
+      photo.animate(
+        [
+          { top: "-20%", offset: 0 },
+          { top: `${70 + Math.random() * 20}%`, offset: 1 },
+        ],
+        {
+          duration: 3000 + Math.random() * 2000,
+          delay: Math.random() * 5 * 1000,
+          easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          fill: "forwards",
+        }
+      );
     });
-  });
+  }
 
-  // Add click handler to view full size
-  photoContainer.addEventListener("click", (e) => {
-    const photo = e.target.closest(".memory-photo");
-    if (!photo) return;
-
-    const currentIndex = Array.from(photoContainer.children).indexOf(photo);
-
-    const fullscreen = document.createElement("div");
-    fullscreen.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    `;
-
-    // Create image container for smooth transitions
-    const imgContainer = document.createElement("div");
-    imgContainer.style.cssText = `
-      position: relative;
-      width: 90%;
-      height: 90vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    `;
-
-    const img = photo.querySelector("img").cloneNode();
-    img.style.cssText = `
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      transition: opacity 0.3s ease;
-    `;
-
-    // Create close button
-    const closeButton = document.createElement("div");
-    closeButton.style.cssText = `
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      color: white;
-      font-size: 32px;
-      font-weight: 300;
-      line-height: 0;
-      text-align: center;
-      transition: all 0.3s ease;
-      z-index: 2001;
-      user-select: none;
-      padding: 0;
-      margin: 0;
-    `;
-
-    // Create a span for the × symbol to control its position better
-    const closeSymbol = document.createElement("span");
-    closeSymbol.innerHTML = "×";
-    closeSymbol.style.cssText = `
-      display: block;
-      transform: translateY(-2px);  // Fine-tune vertical position
-      height: fit-content;
-    `;
-
-    closeButton.appendChild(closeSymbol);
-
-    // Update hover events
-    closeButton.addEventListener("mouseover", () => {
-      closeButton.style.background = "rgba(255,255,255,0.3)";
-      closeButton.style.transform = "scale(1.1)";
-    });
-
-    closeButton.addEventListener("mouseout", () => {
-      closeButton.style.background = "rgba(255,255,255,0.1)";
-      closeButton.style.transform = "scale(1)";
-    });
-
-    closeButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      cleanup();
-    });
-
-    // Add the close button to fullscreen (add this line before appending other elements)
-    fullscreen.appendChild(closeButton);
-
-    // Create navigation arrows
-    const createArrow = (direction) => {
-      const arrow = document.createElement("div");
-      arrow.style.cssText = `
-        position: absolute;
-        top: 50%;
-        ${direction === "left" ? "left: 20px" : "right: 20px"};
-        transform: translateY(-50%);
-        color: white;
-        font-size: 2em;
-        cursor: pointer;
-        padding: 20px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
-        transition: background 0.3s ease;
-        z-index: 2001;
-      `;
-      arrow.innerHTML = direction === "left" ? "←" : "→";
-
-      arrow.addEventListener("mouseover", () => {
-        arrow.style.background = "rgba(255,255,255,0.2)";
+  // Create Intersection Observer
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          startFallingAnimation();
+          observer.disconnect(); // Only need to trigger once
+        }
       });
+    },
+    { threshold: 0.1 }
+  ); // Trigger when 10% of section is visible
 
-      arrow.addEventListener("mouseout", () => {
-        arrow.style.background = "rgba(255,255,255,0.1)";
-      });
+  // Start observing the memories section
+  observer.observe(memoriesSection);
 
-      return arrow;
-    };
+  // Add click handler for navigation link
+  const memoriesLink = document.querySelector('a[href="#memories"]');
+  if (memoriesLink) {
+    memoriesLink.addEventListener("click", startFallingAnimation);
+  }
 
-    const leftArrow = createArrow("left");
-    const rightArrow = createArrow("right");
+  // Rest of your existing displayMemories code...
+}
 
-    // Function to update image
-    let viewerCurrentIndex = currentIndex; // Track current index
+// Helper function to create photo (moved outside displayMemories)
+function createPhoto(index) {
+  const photo = document.createElement("div");
+  photo.className = "memory-photo";
 
-    const updateImage = (newIndex) => {
-      // Use modulo to create a loop
-      const adjustedIndex =
-        ((newIndex % totalImages) + totalImages) % totalImages;
-      viewerCurrentIndex = adjustedIndex;
+  const rotation = Math.random() * 30 - 15;
+  const scale = 0.8 + Math.random() * 0.4;
+  const startX = Math.random() * 100;
 
-      const fadeOut = img.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: 300,
-        easing: "ease",
-      });
+  photo.style.cssText = `
+    position: absolute;
+    left: ${startX}%;
+    transform: rotate(${rotation}deg) scale(${scale});
+    width: 300px;
+    height: 300px;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+  `;
 
-      fadeOut.onfinish = () => {
-        img.src = `./assets/images/${adjustedIndex + 1}.jpeg`;
-        img.animate([{ opacity: 0 }, { opacity: 1 }], {
-          duration: 300,
-          easing: "ease",
-        });
-      };
-    };
+  const img = document.createElement("img");
+  img.src = `./assets/images/${index}.jpeg`;
+  img.style.cssText = `
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  `;
 
-    // Update the navigation event listeners
-    leftArrow.addEventListener("click", (e) => {
-      e.stopPropagation();
-      updateImage(viewerCurrentIndex - 1);
-    });
-
-    rightArrow.addEventListener("click", (e) => {
-      e.stopPropagation();
-      updateImage(viewerCurrentIndex + 1);
-    });
-
-    // Update keyboard navigation
-    const handleKeyPress = (e) => {
-      if (e.key === "ArrowLeft") {
-        updateImage(viewerCurrentIndex - 1);
-      } else if (e.key === "ArrowRight") {
-        updateImage(viewerCurrentIndex + 1);
-      } else if (e.key === "Escape") {
-        cleanup();
-      }
-    };
-
-    const cleanup = () => {
-      document.removeEventListener("keydown", handleKeyPress);
-      fullscreen.remove();
-    };
-
-    document.addEventListener("keydown", handleKeyPress);
-
-    imgContainer.appendChild(img);
-    fullscreen.appendChild(leftArrow);
-    fullscreen.appendChild(imgContainer);
-    fullscreen.appendChild(rightArrow);
-    document.body.appendChild(fullscreen);
-
-    // Prevent click propagation from controls
-    imgContainer.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-
-    leftArrow.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-
-    rightArrow.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  });
+  photo.appendChild(img);
+  return photo;
 }
