@@ -14,7 +14,7 @@ function initializeMainContainer() {
   // Apply base styles
   document.body.style.margin = "0";
   document.body.style.padding = "0";
-  document.body.style.fontFamily = "Arial, sans-serif";
+  document.body.style.fontFamily = "'Dancing Script', 'Quicksand', sans-serif";
   document.body.style.overflow = "hidden auto";
   document.body.style.width = "100%";
 
@@ -139,6 +139,7 @@ function createNavigation() {
   navList.style.gap = "20px";
   navList.style.width = "100%";
   navList.style.boxSizing = "border-box";
+  navList.style.fontFamily = "'Quicksand', sans-serif";
 
   sections.forEach((section) => {
     const li = document.createElement("li");
@@ -149,6 +150,9 @@ function createNavigation() {
     a.style.color = "#333";
     a.style.fontWeight = "500";
     a.style.transition = "color 0.3s ease";
+    a.style.fontFamily = "'Quicksand', sans-serif";
+    a.style.fontSize = "1.1em";
+    a.style.letterSpacing = "0.5px";
 
     a.addEventListener("mouseover", () => {
       a.style.color = "#ff69b4"; // Pink highlight on hover
@@ -318,7 +322,10 @@ function createHeroSection() {
 
   // Create greeting text
   const greeting = document.createElement("h1");
-  greeting.style.fontSize = "3em";
+  greeting.style.fontFamily = "'Dancing Script', cursive";
+  greeting.style.fontSize = "4.5em";
+  greeting.style.fontWeight = "700";
+  greeting.style.textShadow = "2px 2px 4px rgba(255, 105, 180, 0.3)";
   greeting.style.color = "#ff69b4";
   greeting.style.marginBottom = "20px";
   greeting.style.opacity = "0";
@@ -328,7 +335,10 @@ function createHeroSection() {
 
   // Create message container
   const messageContainer = document.createElement("div");
-  messageContainer.style.fontSize = "1.5em";
+  messageContainer.style.fontFamily = "'Quicksand', sans-serif";
+  messageContainer.style.fontSize = "1.8em";
+  messageContainer.style.fontWeight = "500";
+  messageContainer.style.lineHeight = "1.6";
   messageContainer.style.color = "#666";
   messageContainer.style.marginBottom = "30px";
   messageContainer.style.opacity = "0";
@@ -543,4 +553,20 @@ document.addEventListener("DOMContentLoaded", () => {
   createHeroSection();
   setupEventListeners();
   handleResponsiveLayout();
+  loadCustomFonts();
 });
+
+// Add at the top of your file or in the DOMContentLoaded event
+function loadCustomFonts() {
+  const fontLinks = [
+    "https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap",
+    "https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap",
+  ];
+
+  fontLinks.forEach((href) => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  });
+}
