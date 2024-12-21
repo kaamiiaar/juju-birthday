@@ -350,8 +350,8 @@ function createHeroSection() {
   content.appendChild(messageContainer);
   heroSection.appendChild(content);
 
-  // Add background particles
-  createParticleBackground(heroSection);
+  // Add parallax effect after creating content
+  setupParallaxEffect(heroSection);
 
   // Trigger animations after a short delay
   setTimeout(() => {
@@ -411,17 +411,72 @@ function animateWelcomeMessage(container) {
 
 // 3.3. setupParallaxEffect
 function setupParallaxEffect(heroSection) {
-  const layers = createParallaxLayers();
-  layers.forEach((layer) => heroSection.appendChild(layer));
+  const parallaxContainer = document.createElement("div");
+  parallaxContainer.style.position = "absolute";
+  parallaxContainer.style.top = "0";
+  parallaxContainer.style.left = "0";
+  parallaxContainer.style.width = "100%";
+  parallaxContainer.style.height = "100%";
+  parallaxContainer.style.overflow = "hidden";
+  parallaxContainer.style.pointerEvents = "none";
+  parallaxContainer.style.zIndex = "1";
 
-  window.addEventListener("scroll", () => {
-    const scrolled = window.pageYOffset;
-    layers.forEach((layer, index) => {
-      const speed = (index + 1) * 0.2;
-      const yPos = -(scrolled * speed);
-      layer.style.transform = `translateY(${yPos}px)`;
-    });
+  const layers = [
+    { speed: 1, elements: ["🐥", "💝", "✨"], size: "32px", count: 8 },
+    { speed: 1.5, elements: ["🐿️", "💖", "🎀"], size: "28px", count: 6 },
+    { speed: 2, elements: ["❤️", "🌸", "⭐"], size: "24px", count: 10 },
+  ];
+
+  layers.forEach((layer, index) => {
+    const layerDiv = document.createElement("div");
+    layerDiv.style.position = "absolute";
+    layerDiv.style.top = "0";
+    layerDiv.style.left = "0";
+    layerDiv.style.width = "100%";
+    layerDiv.style.height = "100%";
+    layerDiv.style.zIndex = `${index + 1}`;
+
+    for (let i = 0; i < layer.count; i++) {
+      const element = document.createElement("div");
+      element.style.position = "absolute";
+      element.style.fontSize = layer.size;
+      element.textContent =
+        layer.elements[Math.floor(Math.random() * layer.elements.length)];
+      element.style.left = `${Math.random() * 90 + 5}%`;
+      element.style.top = `${Math.random() * 90 + 5}%`;
+      element.style.opacity = "0.8";
+
+      // Add animation with random duration and delay
+      const duration = 3 + Math.random() * 2;
+      const delay = Math.random() * 2;
+
+      element.style.animation = `
+        float ${duration}s ease-in-out ${delay}s infinite,
+        sway ${duration * 1.5}s ease-in-out ${delay}s infinite
+      `;
+
+      layerDiv.appendChild(element);
+    }
+
+    parallaxContainer.appendChild(layerDiv);
   });
+
+  heroSection.appendChild(parallaxContainer);
+
+  // Add animation keyframes
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = `
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+    
+    @keyframes sway {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(30px); }
+    }
+  `;
+  document.head.appendChild(styleSheet);
 }
 
 // Helper function to create particle background
