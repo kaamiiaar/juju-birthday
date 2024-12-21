@@ -9,11 +9,14 @@ function initializeMainContainer() {
   container.style.padding = "0";
   container.style.position = "relative";
   container.style.overflow = "hidden";
+  container.style.boxSizing = "border-box";
 
   // Apply base styles
   document.body.style.margin = "0";
   document.body.style.padding = "0";
   document.body.style.fontFamily = "Arial, sans-serif";
+  document.body.style.overflow = "hidden auto";
+  document.body.style.width = "100%";
 
   return container;
 }
@@ -66,19 +69,19 @@ function handleResponsiveLayout() {
 // Helper functions for responsive layout
 function applyMobileStyles() {
   const container = document.getElementById("container");
-  container.style.padding = "10px";
+  // container.style.padding = "10px";
   // More mobile-specific styles will be added as we create content
 }
 
 function applyTabletStyles() {
   const container = document.getElementById("container");
-  container.style.padding = "20px";
+  // container.style.padding = "20px";
   // More tablet-specific styles will be added as we create content
 }
 
 function applyDesktopStyles() {
   const container = document.getElementById("container");
-  container.style.padding = "30px";
+  // container.style.padding = "30px";
   // More desktop-specific styles will be added as we create content
 }
 
@@ -108,12 +111,15 @@ function createNavigation() {
   const nav = document.createElement("nav");
   nav.style.position = "fixed";
   nav.style.top = "0";
+  nav.style.left = "0";
+  nav.style.right = "0";
   nav.style.width = "100%";
-  nav.style.padding = "20px";
+  nav.style.padding = "20px 0";
   nav.style.backgroundColor = "rgba(255, 255, 255, 0.95)";
   nav.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
   nav.style.zIndex = "1000";
   nav.style.transition = "all 0.3s ease";
+  nav.style.boxSizing = "border-box";
 
   // Create navigation items
   const sections = [
@@ -131,6 +137,8 @@ function createNavigation() {
   navList.style.display = "flex";
   navList.style.justifyContent = "center";
   navList.style.gap = "20px";
+  navList.style.width = "100%";
+  navList.style.boxSizing = "border-box";
 
   sections.forEach((section) => {
     const li = document.createElement("li");
@@ -208,13 +216,16 @@ function createSection(sectionId, content) {
   const section = document.createElement("section");
   section.id = sectionId;
   section.style.minHeight = "100vh";
-  section.style.padding = "80px 20px"; // Account for fixed header
+  section.style.padding = "80px 20px";
   section.style.display = "flex";
   section.style.flexDirection = "column";
   section.style.alignItems = "center";
   section.style.justifyContent = "center";
   section.style.position = "relative";
   section.style.transition = "opacity 0.5s ease";
+  section.style.boxSizing = "border-box";
+  section.style.width = "100%";
+  section.style.overflow = "hidden";
 
   // Add content
   if (typeof content === "string") {
@@ -313,7 +324,7 @@ function createHeroSection() {
   greeting.style.opacity = "0";
   greeting.style.transform = "translateY(20px)";
   greeting.style.transition = "all 1s ease";
-  greeting.textContent = "Happy Birthday!";
+  greeting.textContent = "Happy Birthday juju!";
 
   // Create message container
   const messageContainer = document.createElement("div");
@@ -409,13 +420,19 @@ function createParticleBackground(container) {
   for (let i = 0; i < particleCount; i++) {
     const particle = document.createElement("div");
     particle.style.position = "absolute";
-    particle.style.width = Math.random() * 20 + "px";
-    particle.style.height = particle.style.width;
-    particle.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-    particle.style.borderRadius = "50%";
+    particle.style.fontSize = `${Math.random() * 20 + 10}px`;
     particle.style.opacity = "0.6";
     particle.style.pointerEvents = "none";
+
+    // Randomly choose between chick, squirrel, and heart
+    const random = Math.random();
+    if (random < 0.33) {
+      particle.innerHTML = "🐥";
+    } else if (random < 0.66) {
+      particle.innerHTML = "🐿️";
+    } else {
+      particle.innerHTML = "❤️";
+    }
 
     // Random initial position
     particle.style.left = Math.random() * 100 + "%";
@@ -423,9 +440,9 @@ function createParticleBackground(container) {
 
     // Animation
     particle.style.animation = `
-            float ${Math.random() * 10 + 5}s linear infinite,
-            fade ${Math.random() * 3 + 2}s ease-in-out infinite
-        `;
+      float ${Math.random() * 10 + 5}s linear infinite,
+      fade ${Math.random() * 3 + 2}s ease-in-out infinite
+    `;
 
     container.appendChild(particle);
   }
@@ -447,7 +464,7 @@ function createParallaxLayers() {
   ];
 
   // Define shapes for each layer
-  const layerShapes = [createHearts, createCircles, createStars];
+  const layerShapes = [createHearts, createChicks, createSquirrels];
 
   for (let i = 0; i < layerCount; i++) {
     const layer = document.createElement("div");
@@ -483,24 +500,22 @@ function createHearts() {
   return heart;
 }
 
-function createCircles() {
-  const circle = document.createElement("div");
-  circle.style.position = "absolute";
-  circle.style.width = `${Math.random() * 20 + 10}px`;
-  circle.style.height = circle.style.width;
-  circle.style.borderRadius = "50%";
-  circle.style.border = "2px solid";
-  circle.style.opacity = "0.7";
-  return circle;
+function createChicks() {
+  const chick = document.createElement("div");
+  chick.style.position = "absolute";
+  chick.style.fontSize = `${Math.random() * 20 + 10}px`;
+  chick.innerHTML = "🐥";
+  chick.style.opacity = "0.7";
+  return chick;
 }
 
-function createStars() {
-  const star = document.createElement("div");
-  star.style.position = "absolute";
-  star.style.fontSize = `${Math.random() * 20 + 10}px`;
-  star.innerHTML = "★";
-  star.style.opacity = "0.7";
-  return star;
+function createSquirrels() {
+  const squirrel = document.createElement("div");
+  squirrel.style.position = "absolute";
+  squirrel.style.fontSize = `${Math.random() * 20 + 10}px`;
+  squirrel.innerHTML = "🐿️";
+  squirrel.style.opacity = "0.7";
+  return squirrel;
 }
 
 // Helper function to add particle animations
