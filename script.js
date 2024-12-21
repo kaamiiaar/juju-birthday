@@ -1033,6 +1033,9 @@ function showFullscreenView(currentIndex, totalImages) {
     max-width: 90%;
     max-height: 90vh;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   `;
 
   // Create image
@@ -1042,6 +1045,7 @@ function showFullscreenView(currentIndex, totalImages) {
     max-width: 100%;
     max-height: 90vh;
     object-fit: contain;
+    margin: auto;
   `;
 
   // Create close button with mobile-friendly positioning
