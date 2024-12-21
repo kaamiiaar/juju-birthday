@@ -307,11 +307,39 @@ function handleMobileMenu(hamburger, navList) {
 // 3.1. createHeroSection
 function createHeroSection() {
   const heroSection = createSection("home", "");
-  heroSection.style.background = "linear-gradient(135deg, #ffebf2, #fff0f5)";
+
+  // Update background with a more interesting gradient
+  heroSection.style.background = `
+    linear-gradient(
+      135deg, 
+      #fff0f5 0%,
+      #ffebf2 25%,
+      #ffe1ee 50%,
+      #ffd6e9 75%,
+      #ffcce5 100%
+    )
+  `;
+
+  // Add a subtle radial gradient overlay
+  const overlay = document.createElement("div");
+  overlay.style.position = "absolute";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.background = `
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 192, 203, 0.1) 100%
+    )
+  `;
+  overlay.style.zIndex = "1";
+
   heroSection.style.position = "relative";
   heroSection.style.overflow = "hidden";
 
-  // Create content wrapper
+  // Create content wrapper with higher z-index
   const content = document.createElement("div");
   content.style.position = "relative";
   content.style.zIndex = "2";
@@ -320,7 +348,7 @@ function createHeroSection() {
   content.style.margin = "0 auto";
   content.style.padding = "20px";
 
-  // Create greeting text
+  // Rest of the hero section content...
   const greeting = document.createElement("h1");
   greeting.style.fontFamily = "'Dancing Script', cursive";
   greeting.style.fontSize = "4.5em";
@@ -333,7 +361,6 @@ function createHeroSection() {
   greeting.style.transition = "all 1s ease";
   greeting.textContent = "Happy Birthday juju!";
 
-  // Create message container
   const messageContainer = document.createElement("div");
   messageContainer.style.fontFamily = "'Quicksand', sans-serif";
   messageContainer.style.fontSize = "1.8em";
@@ -348,6 +375,8 @@ function createHeroSection() {
 
   content.appendChild(greeting);
   content.appendChild(messageContainer);
+
+  heroSection.appendChild(overlay);
   heroSection.appendChild(content);
 
   // Add parallax effect after creating content
@@ -422,40 +451,109 @@ function setupParallaxEffect(heroSection) {
   parallaxContainer.style.zIndex = "1";
 
   const layers = [
-    { speed: 1, elements: ["🐥", "💝", "✨"], size: "32px", count: 8 },
-    { speed: 1.5, elements: ["🐿️", "💖", "🎀"], size: "28px", count: 6 },
-    { speed: 2, elements: ["❤️", "🌸", "⭐"], size: "24px", count: 10 },
+    {
+      speed: 1,
+      elements: [["🐥", "🐿️"]],
+      size: "32px",
+      count: 9,
+      opacity: "0.3",
+    },
+    {
+      speed: 1.5,
+      elements: ["💝", "✨", "💖", "🎀"],
+      size: "28px",
+      count: 9,
+      opacity: "0.2",
+    },
+    {
+      speed: 2,
+      elements: ["❤️", "🌸", "⭐"],
+      size: "24px",
+      count: 9,
+      opacity: "0.2",
+    },
   ];
 
-  layers.forEach((layer, index) => {
+  // Helper function to get exact grid positions
+  function getGridPosition(index, gridSize = 3) {
+    const cellWidth = 100 / gridSize;
+    const cellHeight = 100 / gridSize;
+
+    const row = Math.floor(index / gridSize);
+    const col = index % gridSize;
+
+    // Calculate center position of each cell
+    return {
+      left: col * cellWidth + cellWidth / 2,
+      top: row * cellHeight + cellHeight / 2,
+    };
+  }
+
+  layers.forEach((layer, layerIndex) => {
     const layerDiv = document.createElement("div");
     layerDiv.style.position = "absolute";
     layerDiv.style.top = "0";
     layerDiv.style.left = "0";
     layerDiv.style.width = "100%";
     layerDiv.style.height = "100%";
-    layerDiv.style.zIndex = `${index + 1}`;
+    layerDiv.style.zIndex = `${layerIndex + 1}`;
 
     for (let i = 0; i < layer.count; i++) {
-      const element = document.createElement("div");
-      element.style.position = "absolute";
-      element.style.fontSize = layer.size;
-      element.textContent =
-        layer.elements[Math.floor(Math.random() * layer.elements.length)];
-      element.style.left = `${Math.random() * 90 + 5}%`;
-      element.style.top = `${Math.random() * 90 + 5}%`;
-      element.style.opacity = "0.8";
+      const position = getGridPosition(i);
 
-      // Add animation with random duration and delay
-      const duration = 3 + Math.random() * 2;
-      const delay = Math.random() * 2;
+      if (layerIndex === 0) {
+        // Chick and squirrel pairs
+        const pairContainer = document.createElement("div");
+        pairContainer.style.position = "absolute";
+        pairContainer.style.left = `${position.left}%`;
+        pairContainer.style.top = `${position.top}%`;
+        pairContainer.style.opacity = layer.opacity;
+        pairContainer.style.transform = "translate(-50%, -50%)"; // Center in grid cell
 
-      element.style.animation = `
-        float ${duration}s ease-in-out ${delay}s infinite,
-        sway ${duration * 1.5}s ease-in-out ${delay}s infinite
-      `;
+        const pair = layer.elements[0];
+        const chick = document.createElement("span");
+        const squirrel = document.createElement("span");
 
-      layerDiv.appendChild(element);
+        chick.textContent = pair[0];
+        squirrel.textContent = pair[1];
+
+        chick.style.fontSize = layer.size;
+        squirrel.style.fontSize = layer.size;
+        squirrel.style.marginLeft = "5px";
+
+        pairContainer.appendChild(chick);
+        pairContainer.appendChild(squirrel);
+
+        const duration = 3 + Math.random() * 2;
+        const delay = Math.random() * 2;
+
+        pairContainer.style.animation = `
+          float ${duration}s ease-in-out ${delay}s infinite,
+          sway ${duration * 1.5}s ease-in-out ${delay}s infinite
+        `;
+
+        layerDiv.appendChild(pairContainer);
+      } else {
+        const element = document.createElement("div");
+        element.style.position = "absolute";
+        element.style.fontSize = layer.size;
+        element.textContent =
+          layer.elements[Math.floor(Math.random() * layer.elements.length)];
+        element.style.left = `${position.left}%`;
+        element.style.top = `${position.top}%`;
+        element.style.opacity = layer.opacity;
+        element.style.transform = "translate(-50%, -50%)"; // Center in grid cell
+
+        const duration = 3 + Math.random() * 2;
+        const delay = Math.random() * 2;
+
+        element.style.animation = `
+          float ${duration}s ease-in-out ${delay}s infinite,
+          sway ${duration * 1.5}s ease-in-out ${delay}s infinite
+        `;
+
+        layerDiv.appendChild(element);
+      }
     }
 
     parallaxContainer.appendChild(layerDiv);
@@ -467,13 +565,13 @@ function setupParallaxEffect(heroSection) {
   const styleSheet = document.createElement("style");
   styleSheet.textContent = `
     @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-30px); }
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(-50%, calc(-50% - 30px)); }
     }
     
     @keyframes sway {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(30px); }
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(calc(-50% + 30px), -50%); }
     }
   `;
   document.head.appendChild(styleSheet);
