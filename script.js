@@ -384,6 +384,10 @@ function createHeroSection() {
     animateWelcomeMessage(messageContainer);
   }, 500);
 
+  // Add the scroll prompt at the end
+  const scrollPrompt = createScrollPrompt();
+  heroSection.appendChild(scrollPrompt);
+
   return heroSection;
 }
 
@@ -814,7 +818,73 @@ function loadCustomFonts() {
   });
 }
 
-// Simplified displayMemories function that uses local images
+// Add this new function
+function createScrollPrompt() {
+  const arrow = document.createElement("div");
+  arrow.style.cssText = `
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    z-index: 10;
+    text-align: center;
+  `;
+
+  const text = document.createElement("div");
+  text.textContent = "View Memories";
+  text.style.cssText = `
+    color: #ff69b4;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    font-weight: 600;
+  `;
+
+  const arrowSymbol = document.createElement("div");
+  arrowSymbol.style.cssText = `
+    width: 40px;
+    height: 40px;
+    border-right: 6px solid #ff69b4;
+    border-bottom: 6px solid #ff69b4;
+    transform: rotate(45deg);
+    margin: 0 auto;
+    animation: bounce 2s infinite;
+  `;
+
+  // Add bounce animation
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: rotate(45deg) translateY(0);
+      }
+      40% {
+        transform: rotate(45deg) translateY(-20px);
+      }
+      60% {
+        transform: rotate(45deg) translateY(-10px);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  arrow.appendChild(text);
+  arrow.appendChild(arrowSymbol);
+
+  // Add click handler
+  arrow.addEventListener("click", () => {
+    const memoriesSection = document.querySelector("#memories");
+    if (memoriesSection) {
+      memoriesSection.scrollIntoView({ behavior: "smooth" });
+      startFallingAnimation(); // Make sure this function is accessible
+    }
+  });
+
+  return arrow;
+}
+
+// Modify the displayMemories function
 function displayMemories() {
   const memoriesSection = document.querySelector("#memories");
   if (!memoriesSection) return;
@@ -840,19 +910,16 @@ function displayMemories() {
 
   for (let i = 1; i <= totalImages; i++) {
     const photo = createPhoto(i);
-    photo.style.opacity = "0"; // Hide initially
-    photo.style.top = "-20%"; // Set initial position
+    photo.style.opacity = "0";
+    photo.style.top = "-20%";
     photoContainer.appendChild(photo);
     photos.push(photo);
   }
 
-  // Flag to track if animation has started
-  let animationStarted = false;
-
-  // Function to start falling animation
-  function startFallingAnimation() {
-    if (animationStarted) return;
-    animationStarted = true;
+  // Make startFallingAnimation available in wider scope
+  window.startFallingAnimation = function () {
+    if (window.animationStarted) return;
+    window.animationStarted = true;
 
     photos.forEach((photo, index) => {
       photo.style.opacity = "1";
@@ -869,31 +936,19 @@ function displayMemories() {
         }
       );
     });
-  }
+  };
 
-  // Create Intersection Observer
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          startFallingAnimation();
-          observer.disconnect(); // Only need to trigger once
-        }
-      });
-    },
-    { threshold: 0.1 }
-  ); // Trigger when 10% of section is visible
+  // Remove the Intersection Observer
 
-  // Start observing the memories section
-  observer.observe(memoriesSection);
-
-  // Add click handler for navigation link
+  // Update click handler for navigation link
   const memoriesLink = document.querySelector('a[href="#memories"]');
   if (memoriesLink) {
-    memoriesLink.addEventListener("click", startFallingAnimation);
+    memoriesLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      memoriesSection.scrollIntoView({ behavior: "smooth" });
+      window.startFallingAnimation();
+    });
   }
-
-  // Rest of your existing displayMemories code...
 }
 
 // Helper function to create photo (moved outside displayMemories)
