@@ -1005,6 +1005,13 @@ function createPhoto(index, totalImages = 49) {
 }
 
 function showFullscreenView(currentIndex, totalImages) {
+  // Store original body style
+  const originalStyle = window.getComputedStyle(document.body);
+  const originalOverflow = originalStyle.overflow;
+
+  // Prevent body scrolling
+  document.body.style.overflow = "hidden";
+
   const fullscreen = document.createElement("div");
   fullscreen.style.cssText = `
     position: fixed;
@@ -1178,6 +1185,8 @@ function showFullscreenView(currentIndex, totalImages) {
   // Close fullscreen function
   const closeFullscreen = () => {
     document.removeEventListener("keydown", handleKeydown);
+    // Restore original body overflow
+    document.body.style.overflow = originalOverflow;
     fullscreen.remove();
   };
 
