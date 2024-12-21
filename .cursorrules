@@ -1,0 +1,210 @@
+# HTML Structure
+
+- Each web page must contain only one HTML file
+- HTML must have a single container element
+- No separate CSS files allowed
+- No inline or internal CSS in HTML
+
+# JavaScript Requirements
+
+- All content must be dynamically injected via JavaScript
+- All styles must be defined and applied through JavaScript
+- Use JavaScript to create and manage DOM elements
+- Use JavaScript to handle all styling properties
+
+# Container Guidelines
+
+- One main container per HTML page
+- Container should be empty in the HTML file
+- All child elements must be created and appended via JavaScript
+
+# Style Management
+
+- All styles must be applied using JavaScript's style property or setAttribute
+- No CSS classes or IDs for styling purposes
+- No CSS stylesheets (external, internal, or inline)
+- All responsive design must be handled through JavaScript
+
+# Code Organization
+
+- Keep HTML files minimal and clean
+- Maintain all logic and styling in JavaScript files
+- Use modular JavaScript functions for content creation
+- Implement event listeners for dynamic content updates
+
+# Project Structure
+
+- Root directory contains:
+  - index.html (main landing page)
+  - script.js (main JavaScript file)
+  - assets/ (directory for media files)
+    - images/ (for image files)
+    - videos/ (for video files)
+
+# Page Folders
+
+- Create a new folder for each additional page
+- Each page folder must contain exactly two files:
+  - index.html (minimal HTML with container)
+  - script.js (all logic and styling)
+- No CSS files in any folder
+
+# Asset Paths
+
+- Use relative paths for all assets
+- Format: "../assets/images/filename.ext" for subpages
+- Format: "./assets/images/filename.ext" for main page
+- Ensure compatibility with GitHub Pages hosting
+
+# Design Theme
+
+- Color Palette: Soft romantic colors (pastels, pinks, purples, warm tones)
+- Animations: Smooth transitions and interactive effects
+- Layout: Modern, clean design with adequate white space
+- Typography: Elegant, readable fonts for content
+
+# Content Sections
+
+- Hero Section: Birthday message and welcome
+- Timeline: Relationship milestones and key dates
+- Gallery: Photo collection of special moments
+- Memory Cards: Interactive flipcards with stories
+- Messages: Special quotes and personal notes
+- Interactive Elements: Games, puzzles, or surprises
+- Future Section: Wishes and promises
+- Birthday Countdown: Timer to special message
+  - Reveal Time: December 21st, 11:00 PM AEDT (Melbourne)
+  - Hidden Message: Locked until reveal time
+  - Timezone: Australia/Melbourne (UTC+11)
+
+# Interactive Features
+
+- Smooth scrolling between sections
+- Animated content reveals
+- Hover effects on interactive elements
+- Click-to-flip memory cards
+- Image carousel for photo galleries
+- Dynamic content loading
+- Mobile-responsive interactions
+
+# Core Setup Functions
+
+1.1. initializeMainContainer() - Create and configure main container element - Set initial viewport properties - Apply base styles for container - Handle container responsiveness
+
+1.2. setupEventListeners() - Add scroll event listeners - Setup resize handlers - Initialize touch events for mobile - Configure intersection observers for animations
+
+1.3. handleResponsiveLayout() - Define breakpoints for different screen sizes - Create responsive layout adjustments - Handle orientation changes - Manage content reflow for mobile
+
+# Navigation & Layout
+
+2.1. createNavigation() - Build navigation menu structure - Add smooth scroll links - Create hamburger menu for mobile - Implement active section highlighting
+
+2.2. implementSmoothScroll() - Create smooth scrolling between sections - Handle scroll interruption - Add scroll progress indicator - Implement scroll-to-top functionality
+
+2.3. createSection(sectionId, content) - Generate section container - Apply section-specific styles - Handle section transitions - Manage section content loading
+
+# Hero Section
+
+3.1. createHeroSection() - Design welcome screen layout - Add birthday greeting - Create background effects - Implement initial animations
+
+3.2. animateWelcomeMessage() - Create typing effect for messages - Add particle effects - Implement message transitions - Handle welcome sequence timing
+
+3.3. setupParallaxEffect() - Create layered parallax backgrounds - Handle scroll-based movements - Optimize performance - Add responsive adjustments
+
+# Timeline Functions
+
+4.1. createTimeline() - Build timeline structure - Add date markers - Create timeline navigation - Implement timeline scrolling
+
+4.2. addTimelineEvent(date, description) - Format event data - Create event cards - Add event animations - Handle event interactions
+
+4.3. animateTimelineScroll() - Implement smooth timeline navigation - Add scroll-based reveals - Create progress indicators - Handle mobile timeline view
+
+# Gallery Functions
+
+5.1. createGallery() - Build gallery grid layout - Implement masonry layout - Add image loading states - Create gallery navigation
+
+5.2. createImageCarousel() - Build carousel structure - Add slide transitions - Implement touch swipe - Create carousel controls
+
+5.3. handleImageLoading() - Implement lazy loading - Add loading placeholders - Optimize image sizes - Handle loading errors
+
+5.4. implementLightbox() - Create lightbox overlay - Add zoom functionality - Implement navigation controls - Add caption support
+
+# Memory Cards
+
+6.1. createMemoryCards() - Design card layout - Create flip animation - Add memory content - Implement card grid
+
+6.2. handleCardFlip() - Create smooth flip animation - Add click handlers - Manage card states - Handle mobile touch events
+
+6.3. animateCardReveal() - Design reveal sequence - Add entrance animations - Create hover effects - Implement sequential reveals
+
+# Messages & Quotes
+
+7.1. createMessageSection() - Design message layout - Add message animations - Create message categories - Implement filtering
+
+7.2. animateQuotes() - Create quote transitions - Add typing effects - Implement fade sequences - Handle quote timing
+
+7.3. displayRandomQuote() - Create quote selection logic - Implement display timing - Add quote transitions - Handle quote cycling
+
+# Interactive Elements
+
+8.1. createInteractiveElements() - Design interactive components - Add click handlers - Create feedback effects - Implement animations
+
+8.2. implementPuzzleGame() - Create puzzle logic - Add game controls - Implement scoring - Add completion rewards
+
+8.3. handleUserInteraction() - Manage click events - Handle touch inputs - Create feedback effects - Track interaction states
+
+# Birthday Countdown
+
+9.1. initializeCountdown() - Set target date (Dec 21, 11 PM AEDT) - Create countdown display - Initialize timer - Handle timezone conversion
+
+9.2. calculateTimeRemaining() - Implement time difference calculation - Handle timezone adjustments - Update countdown values - Manage interval updates
+
+9.3. updateCountdownDisplay() - Format time display - Animate number changes - Add visual effects - Handle completion state
+
+9.4. checkRevealTime() - Verify current time against target - Handle timezone validation - Implement security checks - Manage reveal triggers
+
+9.5. revealHiddenMessage() - Handle message decryption - Create reveal animation - Implement fallback content - Add celebration effects
+
+9.6. encryptSpecialMessage() - Implement message security - Create encryption logic - Handle storage security - Prevent early access
+
+# Animation Utilities
+
+10.1. fadeInElement() - Create fade transitions - Handle timing options - Add easing functions - Manage animation states
+
+10.2. slideInElement() - Implement slide animations - Add direction options - Create timing functions - Handle mobile animations
+
+10.3. addHoverEffects() - Create hover states - Add interaction feedback - Implement transitions - Handle touch devices
+
+10.4. createTransition() - Build transition effects - Add timing controls - Create custom easings - Handle interruptions
+
+# Helper Functions
+
+11.1. validateDateTime() - Check date formats - Validate time values - Handle timezone conversion - Implement error checking
+
+11.2. formatTimeDisplay() - Format countdown display - Handle different time units - Add localization - Create time strings
+
+11.3. loadAssets() - Manage asset loading - Handle loading states - Implement error recovery - Optimize loading sequence
+
+11.4. handleErrors() - Implement error catching - Create error messages - Add recovery options - Log error details
+
+11.5. checkMobileDevice() - Detect device type - Check screen properties - Handle orientation - Adjust for mobile
+
+# Style Management
+
+12.1. applyStyles(element, styles) - Handle style application - Manage style priorities - Handle vendor prefixes - Update style states
+
+12.2. updateResponsiveStyles() - Handle breakpoint changes - Update layout styles - Manage dynamic sizing - Handle orientation changes
+
+12.3. createColorScheme() - Define color palette - Create theme variations - Handle color transitions - Implement color utils
+
+12.4. setFontStyles() - Configure typography - Handle font loading - Set font hierarchies - Manage font scaling
+
+# Data Management
+
+13.1. loadTimelineData() - Load event data - Format timeline items - Handle data validation - Manage data updates
+
+13.2. loadGalleryImages() - Load image assets - Handle image optimization - Manage loading states - Create image cache
+
+13.3. loadMemoryCardContent() - Load card content - Format card data - Handle content types - Manage card states
+
+13.4. loadQuotes() - Load quote database - Format quote content - Handle quote selection - Manage quote rotation
