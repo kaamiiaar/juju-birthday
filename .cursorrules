@@ -58,20 +58,45 @@
 
 ## 1. Memories Gallery
 
-- Google Drive Integration:
+- Google Photos Integration:
 
-  - Fetch photos and videos from specified Drive folder
-  - Progressive loading on scroll
-  - Lazy loading for performance
-  - Chunked loading (e.g., 20 items at a time)
-  - "Load More" button when reaching scroll threshold
+  - Fetch photos from specified Google Photos album
+  - Use Google Photos API for reliable access
+  - Support for high-resolution images
+  - Maintain original image quality and metadata
+  - Handle image caching for performance
+  - Support for both photos and videos
+  - Respect album sharing permissions
 
-- Gallery Display:
-  - Masonry-style responsive grid
-  - Thumbnail generation for videos
-  - Full-screen viewer for both images and videos
-  - Loading states and animations
-  - Error handling for failed loads
+- Memories Display:
+
+  - Interactive Memory Slider:
+    - Fullscreen immersive display
+    - Smooth transitions between memories
+    - Touch and swipe support for mobile
+    - Arrow navigation and keyboard controls
+  - Gratitude Notes Feature:
+    - Personalized note overlay for each memory
+    - Elegant typography for emotional impact
+    - Fade-in animation for notes
+    - Optional audio narration support
+  - Visual Design:
+    - Dynamic color theming based on image palette
+    - Parallax effects for depth
+    - Subtle ambient background animations
+    - Custom transitions between slides
+  - Interactive Elements:
+
+    - Heart/reaction animations
+    - Optional background music toggle
+    - Timeline navigation bar
+    - Memory categories/tags
+
+  - Responsive Features:
+    - Adaptive layout for all screen sizes
+    - Portrait/landscape orientation handling
+    - Touch-optimized for mobile devices
+    - Gesture controls for navigation
 
 ## 2. Birthday Countdown
 

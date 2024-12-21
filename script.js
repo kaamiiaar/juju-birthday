@@ -585,7 +585,7 @@ function createParticleBackground(container) {
     // Randomly choose between chick, squirrel, and heart
     const random = Math.random();
     if (random < 0.33) {
-      particle.innerHTML = "🐥";
+      particle.innerHTML = "����";
     } else if (random < 0.66) {
       particle.innerHTML = "🐿️";
     } else {
@@ -694,6 +694,99 @@ function addParticleKeyframes() {
   document.head.appendChild(style);
 }
 
+// Create Memories Section
+function createMemoriesSection() {
+  const memoriesSection = createSection("memories", "");
+
+  // Style the section
+  memoriesSection.style.background = `
+    linear-gradient(
+      135deg, 
+      #fff5f8 0%,
+      #fff0f5 50%,
+      #ffebf2 100%
+    )
+  `;
+  memoriesSection.style.padding = "100px 20px";
+
+  // Create slider container
+  const sliderContainer = document.createElement("div");
+  sliderContainer.style.width = "100%";
+  sliderContainer.style.maxWidth = "1200px";
+  sliderContainer.style.margin = "0 auto";
+  sliderContainer.style.position = "relative";
+  sliderContainer.style.overflow = "hidden";
+  sliderContainer.style.borderRadius = "15px";
+  sliderContainer.style.boxShadow = "0 10px 30px rgba(0,0,0,0.1)";
+
+  // Create slider
+  const slider = document.createElement("div");
+  slider.style.display = "flex";
+  slider.style.transition = "transform 0.5s ease";
+  slider.style.height = "80vh";
+
+  // Create navigation buttons
+  const prevButton = createNavButton("←");
+  const nextButton = createNavButton("→");
+  prevButton.style.left = "20px";
+  nextButton.style.right = "20px";
+
+  // Create gratitude note container
+  const noteContainer = document.createElement("div");
+  noteContainer.style.position = "absolute";
+  noteContainer.style.bottom = "40px";
+  noteContainer.style.left = "50%";
+  noteContainer.style.transform = "translateX(-50%)";
+  noteContainer.style.background = "rgba(255, 255, 255, 0.9)";
+  noteContainer.style.padding = "20px";
+  noteContainer.style.borderRadius = "10px";
+  noteContainer.style.maxWidth = "80%";
+  noteContainer.style.textAlign = "center";
+  noteContainer.style.fontFamily = "'Dancing Script', cursive";
+  noteContainer.style.fontSize = "1.5em";
+  noteContainer.style.color = "#ff69b4";
+  noteContainer.style.boxShadow = "0 4px 15px rgba(0,0,0,0.1)";
+
+  // Add elements to container
+  sliderContainer.appendChild(slider);
+  sliderContainer.appendChild(prevButton);
+  sliderContainer.appendChild(nextButton);
+  sliderContainer.appendChild(noteContainer);
+  memoriesSection.appendChild(sliderContainer);
+
+  return memoriesSection;
+}
+
+// Helper function to create navigation buttons
+function createNavButton(text) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  button.style.position = "absolute";
+  button.style.top = "50%";
+  button.style.transform = "translateY(-50%)";
+  button.style.background = "rgba(255, 255, 255, 0.8)";
+  button.style.border = "none";
+  button.style.borderRadius = "50%";
+  button.style.width = "50px";
+  button.style.height = "50px";
+  button.style.fontSize = "24px";
+  button.style.cursor = "pointer";
+  button.style.transition = "all 0.3s ease";
+  button.style.zIndex = "2";
+
+  button.addEventListener("mouseover", () => {
+    button.style.background = "rgba(255, 105, 180, 0.8)";
+    button.style.color = "white";
+  });
+
+  button.addEventListener("mouseout", () => {
+    button.style.background = "rgba(255, 255, 255, 0.8)";
+    button.style.color = "black";
+  });
+
+  return button;
+}
+
 // Initialize everything when the DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
   initializeMainContainer();
@@ -702,6 +795,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   handleResponsiveLayout();
   loadCustomFonts();
+  createMemoriesSection();
 });
 
 // Add at the top of your file or in the DOMContentLoaded event
