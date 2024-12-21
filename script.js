@@ -384,21 +384,23 @@ function animateWelcomeMessage(container) {
 
     if (isDeleting) {
       currentText = message.substring(0, currentText.length - 1);
+      container.textContent = currentText;
       typingSpeed = 50;
+
+      if (currentText === "") {
+        isDeleting = false;
+        currentIndex = (currentIndex + 1) % messages.length;
+        typingSpeed = 100;
+      }
     } else {
       currentText = message.substring(0, currentText.length + 1);
+      container.textContent = currentText;
       typingSpeed = 100;
-    }
 
-    container.textContent = currentText;
-
-    if (!isDeleting && currentText === message) {
-      typingSpeed = 2000; // Pause at end of message
-      isDeleting = true;
-    } else if (isDeleting && currentText === "") {
-      isDeleting = false;
-      currentIndex = (currentIndex + 1) % messages.length;
-      typingSpeed = 500; // Pause before next message
+      if (currentText === message) {
+        isDeleting = true;
+        typingSpeed = 1500; // Pause before starting to delete
+      }
     }
 
     setTimeout(type, typingSpeed);
