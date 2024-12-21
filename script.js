@@ -122,14 +122,7 @@ function createNavigation() {
   nav.style.boxSizing = "border-box";
 
   // Create navigation items
-  const sections = [
-    "Home",
-    "Timeline",
-    "Gallery",
-    "Memories",
-    "Messages",
-    "Countdown",
-  ];
+  const sections = ["Home", "Memories", "Countdown"];
   const navList = document.createElement("ul");
   navList.style.listStyle = "none";
   navList.style.margin = "0";
